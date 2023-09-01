@@ -31,7 +31,7 @@ class Screen:
         return user_input
 
     @property
-    def screen_name(self) -> None:
+    def screen_name(self):
         raise NotImplementedError
 
     def render(self) -> None:
