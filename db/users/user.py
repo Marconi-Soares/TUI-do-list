@@ -68,6 +68,14 @@ class User:
         hash_obj.update(value.encode('utf-8'))
         self._password = hash_obj.hexdigest()
 
+    def assert_password(self, password: str) -> bool:
+        hash_obj: Hashable = hashlib.sha512()
+        hash_obj.update(password.encode('utf-8'))
+
+        if hash_obj.hexdigest() == self.password:
+            return True
+        return False
+
     @property
     def is_saveble(self) -> bool:
         """

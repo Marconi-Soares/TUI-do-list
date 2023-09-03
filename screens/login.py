@@ -1,6 +1,5 @@
 from .screen import Screen
-from .todo import ToDoListScreen
-from .register import RegisterScreen
+from . import menu
 
 
 class LoginScreen(Screen):
@@ -10,43 +9,32 @@ class LoginScreen(Screen):
     """
     def __init__(self) -> None:
         super().__init__()
-        action: str = self.get_action()
-
-        if action == '':
-            self.register
-        else:
-            self.login(action)
-
-    @property
-    def register(self) -> RegisterScreen:
-        return RegisterScreen()
+        self.get_username()
 
     @property
     def screen_name(self) -> str:
-        return f"{' Login ':=^50}"
+        return f"{' Login ':=^70}"
 
-    def login(self, username: str) -> ToDoListScreen:
-        password: str = self.get_user_input(
-            "senha:",
-            password=True,
-            render_kwargs={"username": username}
+    def get_username(self):
+        msg = 'Aperte "enter" para ir para o menu de opções\n'
+        msg += "ou digite seu nome de usuário para prosseguir.\n\n"
+        msg += "username:"
+
+        action: str = self.get_user_input(msg)
+        match action:
+            case "":
+                return menu.MenuScreen()
+
+            case _:
+                self.get_username()
+
+    def is_exiting(self):
+        exiting: str = self.get_user_input(
+            "Deseja sair do programa? [s/N]:"
         )
-        del password
-        # TODO
-        return ToDoListScreen()
+        if exiting == "s":
+            exit()
+        self.get_username()
 
-    def get_action(self) -> str:
-        action: str = self.get_user_input("usuário:")
-        return action
-
-    def render(
-        self,
-        info: bool = True,
-        username: str = ""
-    ) -> None:
+    def render(self) -> None:
         super().render()
-
-        if username == "":
-            print("Para criar uma nova conta, aperte enter")
-        else:
-            print(f"Bem vindo(a) de volta, {username.capitalize()}")
