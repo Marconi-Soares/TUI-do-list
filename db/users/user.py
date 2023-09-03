@@ -63,8 +63,12 @@ class User:
         Esse atributo permite diferenciar um usuário serializado
         (sem senha) de um usuário instanciado (com senha)
         """
+        if self.username is None:
+            return False
+
         if self.password is None:
             return False
+
         return True
 
     @property

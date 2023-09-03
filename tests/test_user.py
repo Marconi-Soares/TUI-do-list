@@ -78,7 +78,6 @@ class TestUser(AbstractTestCase):
         Um usuário que foi instanciado sem seu nome de usuário
         não pode ser salvo no bando de dados.
         """
-        self.skipTest("This validation must be implemented")
         user: User = User(password='senha')
         self.assertFalse(user.is_saveble)
 
