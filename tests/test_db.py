@@ -52,7 +52,6 @@ class TestDB(AbstractTestCase):
         """
         Apenas listas podem ser adicionados ao banco de dados.
         """
-        self.skipTest('Must be implemented')
         with self.assertRaises(ValueError):
             DB.write_db(self.PATH, {})
 
@@ -60,7 +59,6 @@ class TestDB(AbstractTestCase):
         """
         Apenas list[dict] podem ser adicionados ao banco.
         """
-        self.skipTest('Must be implemented')
         with self.assertRaises(ValueError):
             DB.write_db(self.PATH, [1, 2, 3])
 
@@ -69,7 +67,6 @@ class TestDB(AbstractTestCase):
         Ao não encontrar o item que dê match com o campo e valor
         passado, deve resultar num erro StopIteration
         """
-        self.skipTest('Must be implemented')
         with self.assertRaises(StopIteration):
             DB.get(self.PATH, 'invalid', 'xxxx')
 
@@ -78,7 +75,8 @@ class TestDB(AbstractTestCase):
         Ao não conseguir pesquisar no campo solicitado, deve
         resultar num erro KeyError
         """
-        self.skipTest('Must be implemented')
+        self._fill_data([{'id': '123'}])
+
         with self.assertRaises(KeyError):
             DB.get(self.PATH, 'invalid', 'xxxx')
 
