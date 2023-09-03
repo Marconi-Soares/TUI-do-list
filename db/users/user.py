@@ -1,11 +1,19 @@
 import os
 import hashlib
 from uuid import uuid4
-from typing import TypedDict
+from typing import (
+    Hashable,
+    TypedDict
+)
 
 
 class UserDict(TypedDict):
-    id: str
+    id: str | None
+    username: str | None
+
+
+class UserCreateDict(TypedDict):
+    id: None
     username: str
     password: str
 
@@ -17,7 +25,7 @@ class User:
         self.id = kwargs.get("id")
         self.username = kwargs.get('username')
         self.password = kwargs.get('password')
-    
+
     def __str__(self) -> str:
         return f"{self.username}"
 
@@ -26,7 +34,7 @@ class User:
         return str(self._id)
 
     @id.setter
-    def id(self, value: str|None) -> None:
+    def id(self, value: str | None) -> None:
         """
         Caso um id seja passado durante a criação do User,
         assume-se que é apenas uma serialização.
@@ -37,11 +45,11 @@ class User:
             self._id = value
 
     @property
-    def password(self) -> str|None:
+    def password(self) -> str | None:
         return self._password
 
     @password.setter
-    def password(self, value: str|None) -> None:
+    def password(self, value: str | None) -> None:
         """
         Se a senha não for None gera o hash da senha e salva
         no banco de dados. O suporte ao None é para possibilitar
@@ -51,7 +59,7 @@ class User:
             self._password = None
             return
 
-        hash_obj = hashlib.sha512()
+        hash_obj: Hashable = hashlib.sha512()
         hash_obj.update(value.encode('utf-8'))
         self._password = hash_obj.hexdigest()
 
@@ -72,7 +80,7 @@ class User:
         return True
 
     @property
-    def to_dict(self):
+    def to_dict(self) -> UserDict:
         return {
             'id': self.id,
             'username': self.username,
