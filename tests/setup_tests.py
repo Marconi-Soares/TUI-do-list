@@ -11,9 +11,13 @@ class AbstractTestCase(unittest.TestCase):
             os.mkdir('tests/db/')
 
     def tearDown(self) -> None:
-        path: str = 'tests/db/user_db.json'
+        db_paths: list[str] = [
+            'tests/db/user_db.json',
+            'tests/db/db.json',
+        ]
 
-        if os.path.exists(path):
-            os.remove(path)
+        for path in db_paths:
+            if os.path.exists(path):
+                os.remove(path)
 
         os.rmdir('tests/db')
