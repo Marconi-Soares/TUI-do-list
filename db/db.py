@@ -27,6 +27,10 @@ class DB:
 
     @classmethod
     def get(cls, DB_PATH, field: str, value) -> dict | None:
+        """
+        Tenta retornar um usuário, caso não consiga resulta
+        em num erro StopIteration
+        """
         data_list: list[dict] = cls.load_data(DB_PATH)
 
         return next(filter(

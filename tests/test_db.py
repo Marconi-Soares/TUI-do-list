@@ -1,24 +1,15 @@
 import os
-import json
 from db.db import DB
 from typing import Any
-from io import TextIOWrapper
 from tests.test_user import AbstractTestCase
+from .setup_tests import (
+    fill_data,
+    read_data
+)
 
 
 class TestDB(AbstractTestCase):
     PATH: str = 'tests/db/db.json'
-
-    def _read_data(self) -> Any:
-        db: TextIOWrapper = open(self.PATH)
-        data: Any = json.load(db)
-        db.close()
-        return data
-
-    def _fill_data(self, data: list[dict]) -> None:
-        db: TextIOWrapper = open(self.PATH, 'w')
-        json.dump(data, db)
-        db.close()
 
     def test_load_db_is_creating_json_file_when_empty(self):
         """
@@ -36,7 +27,7 @@ class TestDB(AbstractTestCase):
         arquivo.
         """
         temp_data: list[dict[str, str]] = [{'test': 'data test'}]
-        self._fill_data(temp_data)
+        fill_data(self.PATH, temp_data)
         data: list[dict[str, str]] = DB.load_data(self.PATH)
         self.assertListEqual(data, temp_data)
 
@@ -44,7 +35,7 @@ class TestDB(AbstractTestCase):
         self.assertFalse(os.path.exists(self.PATH))
         data_to_write: list[dict[str, str]] = [{'test': 'data test'}]
         DB.write_db(self.PATH, data_to_write)
-        data: Any = self._read_data()
+        data: Any = read_data(self.PATH)
         self.assertTrue(os.path.exists(self.PATH))
         self.assertListEqual(data, data_to_write)
 
@@ -75,7 +66,7 @@ class TestDB(AbstractTestCase):
         Ao não conseguir pesquisar no campo solicitado, deve
         resultar num erro KeyError
         """
-        self._fill_data([{'id': '123'}])
+        fill_data(self.PATH, [{'id': '123'}])
 
         with self.assertRaises(KeyError):
             DB.get(self.PATH, 'invalid', 'xxxx')
@@ -84,5 +75,5 @@ class TestDB(AbstractTestCase):
         data_list: list = []
         data_to_search: dict[str, str] = {'id': '123'}
         data_list.append(data_to_search)
-        self._fill_data(data_list)
+        fill_data(self.PATH, data_list)
         self.assertEqual(DB.get(self.PATH, 'id', '123'), data_to_search)

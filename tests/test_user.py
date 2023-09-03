@@ -1,13 +1,9 @@
-import hashlib
-from typing import Hashable
-from db.users.user import User, UserDict
+from .setup_tests import hash_password
 from .setup_tests import AbstractTestCase
-
-
-def hash_password(password: str) -> str:
-    hash_obj: Hashable = hashlib.sha512()
-    hash_obj.update(password.encode('utf-8'))
-    return hash_obj.hexdigest()
+from db.users.user import (
+    User,
+    UserSerializationDict
+)
 
 
 class TestUser(AbstractTestCase):
@@ -91,28 +87,28 @@ class TestUser(AbstractTestCase):
             id='42',
             password='mal feito feito'
         )
-        serialized_user: UserDict = user.to_dict
+        serialized_user: UserSerializationDict = user.to_dict
         self.assertIsNone(serialized_user.get('password'))
         self.assertEqual(serialized_user.get('id'), user.id)
         self.assertEqual(serialized_user.get('username'), user.username)
 
     def test_user_deserialization_with_username_and_password(self) -> None:
         user: User = User(username='Harry Potter', password='mal feito feito')
-        serialized_user: UserDict = user.to_dict
+        serialized_user: UserSerializationDict = user.to_dict
         self.assertIsNone(serialized_user.get('password'))
         self.assertEqual(serialized_user.get('id'), user.id)
         self.assertEqual(serialized_user.get('username'), user.username)
 
     def test_user_deserialization_with_username_only(self) -> None:
         user: User = User(username='Harry Potter')
-        serialized_user: UserDict = user.to_dict
+        serialized_user: UserSerializationDict = user.to_dict
         self.assertIsNone(serialized_user.get('password'))
         self.assertEqual(serialized_user.get('id'), user.id)
         self.assertEqual(serialized_user.get('username'), user.username)
 
     def test_user_deserialization_without_any_field(self) -> None:
         user: User = User()
-        serialized_user: UserDict = user.to_dict
+        serialized_user: UserSerializationDict = user.to_dict
         self.assertIsNone(serialized_user.get('password'))
         self.assertEqual(serialized_user.get('id'), user.id)
         self.assertEqual(serialized_user.get('username'), user.username)

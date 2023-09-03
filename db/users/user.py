@@ -8,12 +8,17 @@ from typing import (
 
 
 class UserDict(TypedDict):
-    id: str | None
+    id: str
+    username: str
+    password: str
+
+
+class UserSerializationDict(TypedDict):
+    id: str
     username: str | None
 
 
 class UserCreateDict(TypedDict):
-    id: None
     username: str
     password: str
 
@@ -80,7 +85,7 @@ class User:
         return True
 
     @property
-    def to_dict(self) -> UserDict:
+    def to_dict(self) -> UserSerializationDict:
         return {
             'id': self.id,
             'username': self.username,
